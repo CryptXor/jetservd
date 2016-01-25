@@ -1,21 +1,24 @@
 #include <iostream>
 #include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <string.h>
-#include <syslog.h>
 #include "mongoose.h"
+//#include "crypto\rsa.h"
+using namespace std;
 
 static const char *s_http_port = "12341";
 struct mg_mgr mgr;
 struct mg_connection *nc;
 static int s_sig_num = 0;
+static string new_line = "\n";
+static string RSA_KEY = "-----BEGIN RSA PRIVATE KEY-----\n"
+        "MIGaAgEAAkEAt5yrcHAAjhglnCEn6yecMWPeUXcMyo0+itXrLlkpcKIIyqPw546b\n"
+        "GThhlb1ppX1ySX/OUA4jSakHekNP5eWPawIBAAJAW6/aVD05qbsZHMvZuS2Aa5Fp\n"
+        "NNj0BDlf38hOtkhDzz/hkYb+EBYLLvldhgsD0OvRNy8yhz7EjaUqLCB0juIN4QIB\n"
+        "AAIBAAIBAAIBAAIBAA==\n"
+        "-----END RSA PRIVATE KEY-----";
 
-
-using namespace std;
-
+char *calucate_char(char c) {
+    return (char *) (c < 10 ? (char) 48 + c : (char) 97 + c - (char) '\n');
+}
 
 static void ev_handler(struct mg_connection *nc, int ev, void *ev_data) {
     struct http_message *hm = (struct http_message *) ev_data;
